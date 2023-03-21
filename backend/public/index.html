@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        .shirts_container {
+            width: 100px;
+            float: left;
+            margin: 1rem;
+        }
+        
+        .shritimage {
+            width: 100px;
+        }
+        
+        .btn {
+            padding-inline: 2rem;
+            background-color: red;
+            color: wheat;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Shirts</h1>
+    <div class="shirts">
+        <button class="shirts_container" id="prod1">
+        <img
+          src="https://cdn.shopify.com/s/files/1/1414/2498/products/ClassicShirt_FrenchBlue1_1024x1024.jpg?v=1667207840"
+          alt=""
+          class="shritimage"
+        />
+        <button class="btn">Buy</button>
+        </button>
+        <button class="shirts_container" id="prod1">
+        <img
+          src="https://cdn.shopify.com/s/files/1/1414/2498/products/ClassicShirt_FrenchBlue1_1024x1024.jpg?v=1667207840"
+          alt=""
+          class="shritimage"
+        />
+        <button class="btn">Buy</button>
+        </button>
+        <button class="shirts_container" id="prod1">
+        <img
+          src="https://cdn.shopify.com/s/files/1/1414/2498/products/ClassicShirt_FrenchBlue1_1024x1024.jpg?v=1667207840"
+          alt=""
+          class="shritimage"
+        />
+        <button class="btn">Buy</button>
+        </button>
+    </div>
+    <a href="order.html">Order Page</a>
+
+    <script>
+        const ws = new WebSocket("ws://localhost:4000");
+
+        ws.onmessage = ({
+            data
+        }) => {
+            console.log(data);
+        };
+
+        const btn1 = document.getElementById("btn1");
+        // console.log(btn1.childNodes[1].src);
+        // btn1.addEventListener("click", (e) => {
+        //     const nodes = btn1.childNodes;
+        //     ws.send(
+        //         JSON.stringify({
+        //             shirtimage: node[1].src,
+        //         })
+        //     );
+        // });
+    </script>
+</body>
+
+</html>
