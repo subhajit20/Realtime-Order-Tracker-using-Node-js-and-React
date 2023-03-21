@@ -1,4 +1,4 @@
-NAME: Order Tracker Application
+name: Order Tracker Application
 
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 
