@@ -1,0 +1,14 @@
+NAME: Order Tracker Application
+
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+
+on: push
+
+jobs:
+  runs-on: ubuntu-latest
+  steps:
+    - name: This is my first github action yml
+    - run: echo "This is my first github action yml"
+    - name: list all the fils
+    - run: ls
+    - run: echo "🍏 This job's status is ${{ job.status }}." 
