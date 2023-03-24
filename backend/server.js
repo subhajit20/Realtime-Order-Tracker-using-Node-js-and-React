@@ -1,8 +1,11 @@
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const { WebSocketServer } = require("ws");
+const sendProductData = require("./lib/Stremer");
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 app.use(express.static(path.join(__dirname + "/public")));
 let conns = [];
 const ws = new WebSocketServer({
@@ -10,7 +13,7 @@ const ws = new WebSocketServer({
 });
 
 ws.on("connection", (ws) => {
-    ws.send("Hello");
+    sendProductData(ws);
 
     ws.on("close", () => {
         ws.send("Buy");

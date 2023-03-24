@@ -62,19 +62,10 @@
         ws.onmessage = ({
             data
         }) => {
-            console.log(data);
+            console.log(JSON.parse(data));
         };
 
         const btn1 = document.getElementById("btn1");
-        // console.log(btn1.childNodes[1].src);
-        // btn1.addEventListener("click", (e) => {
-        //     const nodes = btn1.childNodes;
-        //     ws.send(
-        //         JSON.stringify({
-        //             shirtimage: node[1].src,
-        //         })
-        //     );
-        // });
     </script>
 </body>
 
