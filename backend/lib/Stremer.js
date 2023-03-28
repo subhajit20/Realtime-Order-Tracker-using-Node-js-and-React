@@ -26,16 +26,19 @@ function sendProductData(ws) {
             } else {
                 ws.send(
                     JSON.stringify({
-                        id: prods[i].id,
-                        title: prods[i].title,
-                        description: prods[i].description,
-                        price: prods[i].price,
-                        discountPercentage: prods[i].discountPercentage,
-                        rating: prods[i].rating,
-                        stock: prods[i].stock,
-                        brand: prods[i].brand,
-                        category: prods[i].catgory,
-                        thumbnail: prods[i].thumbnail,
+                        route:"/products",
+                        allprods:{
+                            id: prods[i].id,
+                            title: prods[i].title,
+                            description: prods[i].description,
+                            price: prods[i].price,
+                            discountPercentage: prods[i].discountPercentage,
+                            rating: prods[i].rating,
+                            stock: prods[i].stock,
+                            brand: prods[i].brand,
+                            category: prods[i].catgory,
+                            thumbnail: prods[i].thumbnail,
+                        }
                     })
                 );
                 i++;

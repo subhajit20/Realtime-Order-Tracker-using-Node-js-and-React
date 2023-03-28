@@ -37,34 +37,44 @@ const ws = new WebSocketServer({
 });
 
 
+let clients = [];
 ws.on("connection", (ws,req) => {
+    clients.push(ws)
+
+    console.log(clients.length)
     if(req.url === '/'){
         sendProductData(ws);
+        
+        ws.on('message',(data)=>{
 
-    ws.on('message',(data)=>{
-
-    })
-    ws.on("close", () => {
-        ws.send("Buy");
-    });
-    }
-});
-
-ws.on("connection", (ws,req) => {
-    if(req.url === '/orders'){
+        })
+        ws.on("close", () => {
+            ws.send("Buy");
+        });
+    }else if(req.url === '/orders'){
         giveOrders(ws);
     }
+
+    ws.on('close',()=>{
+        ws.send("okk")
+    })
 });
 
-ws.on("connection", (ws,req) => {
-    if(req.url === '/vieworeder/:orderid'){
-        ws.send(req.params.id)
-    }
-});
 
+// ws.on("connection", (ws,req) => {
+//     if(req.url === '/vieworeder/:orderid'){
+//         ws.send(req.params.id)
+//     }
+// });
 
+function getWS(req,res,next){
+    req.ws = clients[0];
+    next();
+}
 
+app.use(getWS)
 app.use("/api",OrderRoute)
+
 
 app.listen(PORT, () =>
     console.log(`Server is running at http://localhost:${PORT}`)

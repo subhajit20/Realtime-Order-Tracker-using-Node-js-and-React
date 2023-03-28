@@ -1,8 +1,8 @@
-import React from 'react'
+import React,{useCallback} from 'react'
 
 function useOrderHook() {
     async function placeOrder(details){
-        console.log(details)
+            console.log(details)
         try{
             const res = await fetch("http://localhost:3000/api/placeorder",{
                 method:"POST",
@@ -17,6 +17,7 @@ function useOrderHook() {
             console.log(e)
         }
     }
+
   return [placeOrder]
 }
 
