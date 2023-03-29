@@ -38,34 +38,27 @@ const ws = new WebSocketServer({
 
 
 let clients = [];
+console.log("Before",clients.length)
 ws.on("connection", (ws,req) => {
     clients.push(ws)
-
-    console.log(clients.length)
+    console.log("After",clients.length)
     if(req.url === '/'){
-        sendProductData(ws);
-        
-        ws.on('message',(data)=>{
-
-        })
-        ws.on("close", () => {
-            ws.send("Buy");
-        });
-    }else if(req.url === '/orders'){
-        giveOrders(ws);
+        // ws.on("message",(data)=>{
+        //     const {event} = JSON.parse(data);
+        //     console.log(event)
+        //     if(event === "getproducts"){
+        //     }else if(event === "getorders"){
+        //     }
+        // })
+        sendProductData(clients[0]);
+        giveOrders(clients[0]);
     }
 
     ws.on('close',()=>{
-        ws.send("okk")
+        clients.pop(ws)
     })
 });
 
-
-// ws.on("connection", (ws,req) => {
-//     if(req.url === '/vieworeder/:orderid'){
-//         ws.send(req.params.id)
-//     }
-// });
 
 function getWS(req,res,next){
     req.ws = clients[0];
