@@ -5,7 +5,9 @@ const { v4: uuidv4 } = require('uuid');
 const orderSchema = new mongoose.Schema({
     orderid:{
         type:String,
-        default:uuidv4()
+        default:()=>{
+            return uuidv4()
+        }
     },
     title:{
         type:String,

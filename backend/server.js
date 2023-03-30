@@ -22,13 +22,9 @@ mongoose.connect(process.env.MONGO_URI)
  */
 const OrderRoute = require("./routes/Order.route")
 
+app.use(cors())
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
-app.use(cors({
-    origin:"*",
-    methods:["GET","POST","PUT","DELETE"]
-}))
-
 
 app.use(express.static(path.join(__dirname + "/public")));
 let conns = [];
@@ -43,15 +39,9 @@ ws.on("connection", (ws,req) => {
     clients.push(ws)
     console.log("After",clients.length)
     if(req.url === '/'){
-        // ws.on("message",(data)=>{
-        //     const {event} = JSON.parse(data);
-        //     console.log(event)
-        //     if(event === "getproducts"){
-        //     }else if(event === "getorders"){
-        //     }
-        // })
+
         sendProductData(clients[0]);
-        giveOrders(clients[0]);
+        giveOrders(clients[0],{type:"ALL"});
     }
 
     ws.on('close',()=>{

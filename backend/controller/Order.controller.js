@@ -1,42 +1,62 @@
 const Order = require("../model/Order.model");
+const {getAllOrders,getOrderbyId} = require("../lib/Orders.lib")
 
-
-async function giveOrders(ws){
-    let allorders = await Order.find();
-        
-    if(allorders.length > 0){
-        ws.send(JSON.stringify({
-            route:"/orders",
-            allorders:allorders
-        }))
-
-        return true;
-    }else{
-        ws.send(JSON.stringify({
-            msg:"No Orders"
-        }))
-
-        return false
+async function giveOrders(ws,action){
+    if(action.type === "ALL"){
+        getAllOrders(ws);
+    }else if(action.type === "INDIVIDUAL"){
+        getOrderbyId(ws,action.id)
     }
 }
 
+/**
+ * Placeorder controller for placing order
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function placeOrder(req,res){
     try{
         const neworder = new Order(req.body);
         neworder.save();
-        const flag = await giveOrders(req.ws);
-        if(flag){
-            res.status(200).json({
-                msg:"Order is successfully placed!!"
-            })
-        }else{
-            res.status(500).json({
-                msg:"Something went wrong"
-            })
-        }
+        await giveOrders(req.ws,{type:"ALL"});
+        res.status(200).json({
+            msg:"Order is successfully placed!!"
+        })
     }catch(e){
         res.status(500).json({
             msg:"Something went wrong"
+        })
+    }
+}
+
+async function cancelOrder(req,res){
+    try{
+        const {orderid} = req.body;
+        console.log(orderid)
+        const isOrder = await Order.find({orderid:orderid})
+        console.log(isOrder)
+        if(isOrder.length > 0){
+            const isDeleted = await Order.deleteOne({orderid:orderid});
+            console.log(isDeleted)
+            if(isDeleted.acknowledged === true){
+                await giveOrders(req.ws,{type:"ALL"});
+                res.status(200).json({
+                    msg:"Order has been deleted..."
+                })
+            }else{
+                res.status(401).json({
+                    msg:"Orderid is not valid..."
+                })
+            }
+        }else{
+            res.status(400).json({
+                msg:"Orderid is not valid..."
+            })
+        }
+    }catch(e){
+        console.log(e)
+        res.status(500).json({
+            msg:"Something went wrong..."
         })
     }
 }
@@ -66,31 +86,32 @@ async function getOrders(req,res){
 
 
 
-async function getOrdersById(ws,id){
-    let i = 0;
+async function getOrdersById(req,res){
+    const {orderid} = req.body;
     try{
-        let allorders = await Order.find({orderid:id});
+        let allorders = await Order.find({orderid:orderid});
         if(allorders.length > 0){
-            ws.send(allorders.toString())
-            let id = setInterval(()=>{
-                if(i >= allorders.length){
-                    clearInterval(id);
-                    return;
-                }else{
-                    ws.send(JSON.stringify(allorders[i]))
-                    i++;
-                }
-            },300)
+            await giveOrders(req.ws,{type:"INDIVIDUAL",id:allorders[0].orderid});
+            
+            res.status(200).json({
+                msg:"You have got your your order"
+            })
         }else{
-            ws.send("No orders")
+            res.status(400).json({
+                msg:"Order is not valid"
+            })
         }
     }catch(e){
-        ws.send("No orders")
+        res.status(500).json({
+            msg:"Something went wrong"
+        })
     }
 }
 
 module.exports = {
     placeOrder,
     getOrders,
-    giveOrders
+    giveOrders,
+    cancelOrder,
+    getOrdersById
 }

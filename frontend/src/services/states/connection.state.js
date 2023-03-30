@@ -1,7 +1,8 @@
 let connection = {
     ws:undefined,
     allProducts:[],
-    allOrders:[]
+    allOrders:[],
+    individualOrder:[]
 }
 
 export default connection

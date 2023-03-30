@@ -19,6 +19,12 @@ const connectionReducer = (state=connection,action) => {
                 ...state,
                 allOrders:[...action.payload]
             }
+        case "GET_A_ORDERS":
+            state.individualOrder = [];
+                return {
+                    ...state,
+                    individualOrder:[...action.payload]
+                }
         default:
             return state;
     }

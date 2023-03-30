@@ -5,7 +5,7 @@ import Orders from '../orders'
 import { useSelector,useDispatch } from "react-redux";
 
 function index() {
-  const [placeOrder] = useOrderHook();
+  const {placeOrder} = useOrderHook();
   const {connectionReducer} = useSelector((state)=> state);
   const dispatch = useDispatch()
 
@@ -16,12 +16,15 @@ function index() {
         const {route} = JSON.parse(data)
         if(route === "/products"){
           const {allprods} = JSON.parse(data);
-          console.log(allprods)
           dispatch({type:"GET_ALL_PRODUCTS",payload:allprods});
         }if(route === "/orders"){
           const {allorders} = JSON.parse(data)
           console.log(allorders)
           dispatch({type:"GET_ALL_ORDERS",payload:allorders});
+        }if(route === "/individualorder"){
+          const {allorders} = JSON.parse(data);
+          console.log(allorders)
+          dispatch({type:"GET_A_ORDERS",payload:allorders})
         }
         
       }
@@ -38,8 +41,6 @@ function index() {
         }) : ""
       }
     </div>
-    <div className="h-[20rem]"></div>
-      <Orders/>
     </div>
   );
 }
