@@ -1,16 +1,16 @@
-import React from 'react'
-import Card from '../cards/Card'
-import { useSelector } from 'react-redux'
+import React from 'react';
+import LeftSection from './LeftSection';
+import RightSection from './RightSection';
 
 function index() {
-    const {connectionReducer} = useSelector((state)=> state);
   return (
-    <div className='translate-y-20'>
-        {
-            connectionReducer.individualOrder.length > 0 ? connectionReducer.individualOrder.map((order,i)=>{
-                return <Card key={i} prodimage={order.productimage} option={false} />
-            }) : ""
-        }
+    <div className='translate-y-20 grid grid-cols-2 justify-items-center'>
+      <div className='left'>
+        <LeftSection />
+      </div>
+      <div className='right'>
+        <RightSection />
+      </div>
     </div>
   )
 }

@@ -6,68 +6,52 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <style>
-        .shirts_container {
-            width: 100px;
-            float: left;
-            margin: 1rem;
-        }
-        
-        .shritimage {
-            width: 100px;
-        }
-        
-        .btn {
-            padding-inline: 2rem;
-            background-color: red;
-            color: wheat;
-            cursor: pointer;
-        }
-    </style>
 </head>
 
 <body>
-    <h1>Shirts</h1>
-    <div class="shirts">
-        <button class="shirts_container" id="prod1">
-        <img
-          src="https://cdn.shopify.com/s/files/1/1414/2498/products/ClassicShirt_FrenchBlue1_1024x1024.jpg?v=1667207840"
-          alt=""
-          class="shritimage"
-        />
-        <button class="btn">Buy</button>
-        </button>
-        <button class="shirts_container" id="prod1">
-        <img
-          src="https://cdn.shopify.com/s/files/1/1414/2498/products/ClassicShirt_FrenchBlue1_1024x1024.jpg?v=1667207840"
-          alt=""
-          class="shritimage"
-        />
-        <button class="btn">Buy</button>
-        </button>
-        <button class="shirts_container" id="prod1">
-        <img
-          src="https://cdn.shopify.com/s/files/1/1414/2498/products/ClassicShirt_FrenchBlue1_1024x1024.jpg?v=1667207840"
-          alt=""
-          class="shritimage"
-        />
-        <button class="btn">Buy</button>
-        </button>
+    <h1>Order Status Manipulation</h1>
+    <div >
+        <form action="http://localhost:3000/api/changetstat">
+            <label for="status">Order Manipulation</label>
+            <div></div>
+            <input type="text" id="orderid" placeholder="Enter id of order">
+            <div></div>
+            <select name="status" id="status">
+                <option value="Placed">Placed</option>
+                <option value="Packed">Packed</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Out for Delivery">Out for Delivery</option>
+                <option value="Delivered">Delivered</option>
+            </select>
+            <div></div>
+            <button type="submit" id="btn">Change The Product Status</button>
+        </form>
     </div>
-    <a href="order.html">Order Page</a>
 
     <script>
-        const ws = new WebSocket("ws://localhost:4000");
-        /**
-         * Testing websocket
-         */
-        ws.onmessage = ({
-            data
-        }) => {
-            console.log(JSON.parse(data));
-        };
+        const btn = document.getElementById("btn");
+        const status = document.getElementById("status");
+        const orderid = document.getElementById("orderid")
 
-        const btn1 = document.getElementById("btn1");
+        btn.addEventListener("click",async (e)=>{
+            e.preventDefault();
+            console.log(status.value)
+            const res = await fetch("http://localhost:3000/api/changestat",{
+                method:"POST",
+                headers:{
+                    'content-type':"application/json"
+                },
+                body:JSON.stringify({
+                    orderid:orderid.value,
+                    status:status.value
+                })
+            });
+
+            const data = await res.json();
+            console.log(data)
+
+        })
+        
     </script>
 </body>
 

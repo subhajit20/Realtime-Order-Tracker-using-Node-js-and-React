@@ -3,9 +3,9 @@ const {getAllOrders,getOrderbyId} = require("../lib/Orders.lib")
 
 async function giveOrders(ws,action){
     if(action.type === "ALL"){
-        getAllOrders(ws);
+        await getAllOrders(ws);
     }else if(action.type === "INDIVIDUAL"){
-        getOrderbyId(ws,action.id)
+        await getOrderbyId(ws,action.id)
     }
 }
 
@@ -108,10 +108,48 @@ async function getOrdersById(req,res){
     }
 }
 
+async function changeOrderStatus(req,res){
+    const {orderid,status} = req.body;
+    console.log(orderid,status)
+
+    try{
+        let isOrder = await Order.find({orderid:orderid});
+        if(isOrder.length > 0){
+            let changeStatus = await Order.updateOne({orderid:isOrder[0].orderid},{
+                $set:{
+                    status:status
+                }
+            });
+            if(changeStatus.acknowledged === true){
+                giveOrders(req.ws,{type:"INDIVIDUAL",id:orderid})
+                .then(async ()=>{
+                    await giveOrders(req.ws,{type:"ALL"});
+                })
+                
+                res.status(201).json({
+                    status:true,
+                    order:changeStatus
+                })
+            }else{
+                throw "Order id not valid"
+            }
+            
+        }else{
+            throw "Orderid Is not valid"
+        }
+        
+    }catch(e){
+        res.status(500).json({
+            msg:e
+        })
+    }
+}
+
 module.exports = {
     placeOrder,
     getOrders,
     giveOrders,
     cancelOrder,
-    getOrdersById
+    getOrdersById,
+    changeOrderStatus
 }
